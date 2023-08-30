@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import MovieList from './components/MovieList';
+import FavoritesList from './components/FavoritesList';
 import SearchBox from './components/SearchBox';
 import './App.css';
+import MovieListHeading from './components/MovieListHeading';
 
 function App() {
   const [movies, setMovies] = useState([])
@@ -20,7 +22,7 @@ function App() {
   }
 
   const loadFavorites = () => {
-    fetch("https://nfqtg9-8080.csb.app/api/movies")
+    fetch("https://nfqtg9-8088.csb.app/api/movies")
       .then(x => x.json())
       .then(response => {
         setFavorites(response)
@@ -33,13 +35,33 @@ function App() {
     getMovieRequest(searchValue);
   }, [searchValue]);
 
+  function onHandleClick(handle, list) {
+    const sliderIndex = parseInt(getComputedStyle(document.documentElement).getPropertyValue(`--${list}-slider-index`));
+    if (handle === 'leftHandle') {
+      document.documentElement.style.setProperty(`--${list}-slider-index`, sliderIndex - 1);
+    } else {
+      document.documentElement.style.setProperty(`--${list}-slider-index`, sliderIndex + 1);
+    }
+  }
+
   return (
     <div className="App">
       <div className='row'>
-        <MovieList movies={movies} />
+        <div className='header'>
+          <MovieListHeading heading='Movies' />
+          <SearchBox searchValue={searchValue} setSearchValue={setSearchValue} />
+        </div>
+        <MovieList 
+          movies={movies}
+          onHandleClick={onHandleClick} />
       </div>
       <div className='row'>
-        <MovieList movies={favorites} />
+      <div className='header'>
+          <MovieListHeading heading='Favorites' />
+        </div>
+        <FavoritesList 
+          movies={favorites}
+          onHandleClick={onHandleClick} />
       </div>
     </div>
   );

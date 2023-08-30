@@ -1,6 +1,6 @@
 import React from 'react';
 
-function MovieListItem( props ) {
+function FavoritesListItem( props ) {
     return (
         <div 
             className='img-container'
@@ -11,23 +11,23 @@ function MovieListItem( props ) {
     );
 }
 
-export default function MovieList({ movies, onHandleClick }) {
+export default function FavoritesList({ movies, onHandleClick }) {
   return (
     <div className='container'>
-        <button className='handle left-handle' onClick={() => onHandleClick('leftHandle', 'movie')}>
+        <button className='handle left-handle' onClick={() => onHandleClick('leftHandle', 'favorites')}>
             <div className='text'>&#8249;</div>
         </button>
-        <div className='movie-slider'>
+        <div className='favorites-slider'>
             {movies.filter((movie) => {
                 return movie.Poster !== "N/A"
             }).map((movie) => (
-                <MovieListItem
+                <FavoritesListItem
                     movie={movie}
                     key={movie.imdbID}
                 />
             ))}
         </div>
-        <button className='handle right-handle' onClick={() => onHandleClick('rightHandle', 'movie')}>
+        <button className='handle right-handle' onClick={() => onHandleClick('rightHandle', 'favorites')}>
             <div className='text'>&#8250;</div>
         </button>
     </div>
