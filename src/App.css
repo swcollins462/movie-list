@@ -105,7 +105,37 @@ body {
 .header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 0 calc(var(--handle-size) + var(--img-gap) * 2);
+}
+
+.search-input {
+  padding: .5rem;
+  border-radius: 0.25rem;
+  width: 25rem;
+}
+
+.fav-text {
+  margin-right: .5rem;
+}
+
+.overlay {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: whitesmoke;
+  width: calc(100% - var(--img-gap) * 2);
+  transition: 0.5s ease;
+  opacity: 0;
+  bottom: 1.1rem;
+  left: calc(0 - var(--img-gap));
+  font-size: 1.2rem;
+  padding: 1.7rem;
+  text-align: center;
+  user-select: none;
+}
+
+.img-container:hover .overlay {
+  opacity: 1;
 }
 
 @media (max-width: 2400px) {

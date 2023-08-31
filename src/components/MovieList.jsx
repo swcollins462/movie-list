@@ -1,17 +1,20 @@
-import React from 'react';
+import AddFavorites from "./AddFavorites";
 
-function MovieListItem( props ) {
+function MovieListItem({ movie, addFavoriteMovie }) {
     return (
         <div 
             className='img-container'
+            onClick={() => addFavoriteMovie(movie)}
         >
-            <img src={props.movie.Poster} alt={props.movie.Title}></img>
-            <div className='overlay'></div>
+            <img src={movie.Poster} alt={movie.Title}></img>
+            <div className='overlay'>
+                <AddFavorites />
+            </div>
         </div>
     );
 }
 
-export default function MovieList({ movies, onHandleClick }) {
+export default function MovieList({ movies, onHandleClick, addFavoriteMovie }) {
   return (
     <div className='container'>
         <button className='handle left-handle' onClick={() => onHandleClick('leftHandle', 'movie')}>
@@ -24,6 +27,7 @@ export default function MovieList({ movies, onHandleClick }) {
                 <MovieListItem
                     movie={movie}
                     key={movie.imdbID}
+                    addFavoriteMovie={addFavoriteMovie}
                 />
             ))}
         </div>

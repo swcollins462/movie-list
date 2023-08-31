@@ -1,17 +1,20 @@
-import React from 'react';
+import RemoveFavorites from "./RemoveFavorites";
 
-function FavoritesListItem( props ) {
+function FavoritesListItem({ movie, removeFavoriteMovie }) {
     return (
         <div 
             className='img-container'
+            onClick={() => removeFavoriteMovie(movie)}
         >
-            <img src={props.movie.Poster} alt={props.movie.Title}></img>
-            <div className='overlay'></div>
+            <img src={movie.Poster} alt={movie.Title}></img>
+            <div className='overlay'>
+                <RemoveFavorites />
+            </div>
         </div>
     );
 }
 
-export default function FavoritesList({ movies, onHandleClick }) {
+export default function FavoritesList({ movies, onHandleClick, removeFavoriteMovie }) {
   return (
     <div className='container'>
         <button className='handle left-handle' onClick={() => onHandleClick('leftHandle', 'favorites')}>
@@ -24,6 +27,7 @@ export default function FavoritesList({ movies, onHandleClick }) {
                 <FavoritesListItem
                     movie={movie}
                     key={movie.imdbID}
+                    removeFavoriteMovie={removeFavoriteMovie}
                 />
             ))}
         </div>

@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import MovieList from './components/MovieList';
 import FavoritesList from './components/FavoritesList';
 import SearchBox from './components/SearchBox';
-import './App.css';
 import MovieListHeading from './components/MovieListHeading';
+import useDebounceEffect from './components/useDebounceEffect';
+import './App.css';
 
 function App() {
   const [movies, setMovies] = useState([])
@@ -22,7 +23,7 @@ function App() {
   }
 
   const loadFavorites = () => {
-    fetch("https://nfqtg9-8088.csb.app/api/movies")
+    fetch('https://nfqtg9-8088.csb.app/api/movies')
       .then(x => x.json())
       .then(response => {
         setFavorites(response)
@@ -31,9 +32,9 @@ function App() {
 
   useEffect(loadFavorites, []);
 
-  useEffect(() => {
+  useDebounceEffect(() => {
     getMovieRequest(searchValue);
-  }, [searchValue]);
+  }, [searchValue], 500)
 
   function onHandleClick(handle, list) {
     const sliderIndex = parseInt(getComputedStyle(document.documentElement).getPropertyValue(`--${list}-slider-index`));
@@ -44,8 +45,39 @@ function App() {
     }
   }
 
+  function addFavoriteMovie({ imdbID, Title, Poster }) {
+    if (!favorites.find(e => e.imdbID === imdbID)) {
+      fetch('https://nfqtg9-8088.csb.app/api/movies/new', {
+        method: 'POST',
+        body: JSON.stringify({
+          imdbID,
+          Title,
+          Poster
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+        mode: 'cors'
+      })
+        .then(x => x.json())
+        .then(loadFavorites);
+    } 
+  };
+
+  function removeFavoriteMovie({ imdbID }) {
+    fetch('https://nfqtg9-8088.csb.app/api/movies/' + imdbID, {
+      method: 'DELETE',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+      mode: 'cors'
+    })
+      .then(x => x.json())
+      .then(loadFavorites);
+  };
+
   return (
-    <div className="App">
+    <div className='App'>
       <div className='row'>
         <div className='header'>
           <MovieListHeading heading='Movies' />
@@ -53,7 +85,8 @@ function App() {
         </div>
         <MovieList 
           movies={movies}
-          onHandleClick={onHandleClick} />
+          onHandleClick={onHandleClick}
+          addFavoriteMovie={addFavoriteMovie} />
       </div>
       <div className='row'>
       <div className='header'>
@@ -61,7 +94,8 @@ function App() {
         </div>
         <FavoritesList 
           movies={favorites}
-          onHandleClick={onHandleClick} />
+          onHandleClick={onHandleClick}
+          removeFavoriteMovie={removeFavoriteMovie} />
       </div>
     </div>
   );
